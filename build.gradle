@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.qameta.allure' version '2.11.2' // Ensure you are using a compatible version
+    id("io.freefair.lombok") version "8.6"
 }
 
 repositories {
@@ -8,10 +9,21 @@ repositories {
 }
 
 dependencies {
-    // Add your dependencies
-    testImplementation 'io.rest-assured:rest-assured:5.3.1'
+
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation group: 'org.projectlombok', name: 'lombok-utils', version: '1.18.12'
+    implementation 'io.rest-assured:rest-assured:5.3.1'
+    implementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.10'
+    implementation group: 'io.qameta.allure', name: 'allure-rest-assured', version: '2.22.2'
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     testImplementation 'io.qameta.allure:allure-junit5:2.21.0'
+
+    // Lombok dependency
+    compileOnly 'org.projectlombok:lombok:1.18.30'  // Add Lombok for compile-time processing
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'  // Add annotation processor for Lombok
+
 }
 
 allure {
