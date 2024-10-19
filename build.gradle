@@ -15,7 +15,9 @@ dependencies {
     implementation group: 'org.projectlombok', name: 'lombok-utils', version: '1.18.12'
     implementation 'io.rest-assured:rest-assured:5.3.1'
     implementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.10'
-    implementation group: 'io.qameta.allure', name: 'allure-rest-assured', version: '2.22.2'
+    implementation group: 'io.qameta.allure', name: 'allure-rest-assured', version: '2.29.0'
+    implementation group: 'io.qameta.allure', name: 'allure-java-commons', version: '2.29.0'
+    implementation 'org.yaml:snakeyaml:2.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     testImplementation 'io.qameta.allure:allure-junit5:2.21.0'
@@ -34,7 +36,57 @@ allure {
 
 tasks.withType(Test) {
     useJUnitPlatform()  // Configure JUnit Platform for running tests
-    systemProperty 'allure.results.directory', file("$buildDir/allure-results")  // Set Allure results directory
-    systemProperty 'allure.link.issue.pattern', 'https://example.com/issue/%s'  // Optional link configuration
-    systemProperty 'allure.link.tms.pattern', 'https://example.com/tms/{}'      // Optional link configuration
+}
+
+def savedHistoryDir = file("$rootDir/allure-history")  // Directory to save history outside the build folder
+
+// Task to save Allure history before cleaning
+tasks.register('saveAllureHistory') {
+    description = 'Saves the Allure history outside the build directory to preserve it during clean.'
+    doLast {
+        def historySource = file("$buildDir/reports/allure-report/allureReport/history")
+
+        if (historySource.exists()) {
+            copy {
+                from historySource
+                into savedHistoryDir
+            }
+            println "Allure history saved to $savedHistoryDir."
+        } else {
+            println "No Allure history found to save."
+        }
+    }
+}
+
+// Task to restore Allure history after cleaning
+tasks.register('restoreAllureHistory') {
+    description = 'Restores the Allure history after the clean task.'
+    doLast {
+        def historyDest = file("$buildDir/allure-results/history")
+
+        if (savedHistoryDir.exists()) {
+            copy {
+                from savedHistoryDir
+                into historyDest
+            }
+            println "Allure history restored from $savedHistoryDir."
+        } else {
+            println "No saved Allure history found to restore."
+        }
+    }
+}
+
+// Make the `saveAllureHistory` task run before `clean`
+tasks.named('clean') {
+    dependsOn 'saveAllureHistory'
+}
+
+// Make the `restoreAllureHistory` task run before tests
+tasks.named('test') {
+    dependsOn 'restoreAllureHistory'
+}
+
+// Generate Allure report after restoring history
+tasks.named('allureReport') {
+    dependsOn 'restoreAllureHistory'
 }

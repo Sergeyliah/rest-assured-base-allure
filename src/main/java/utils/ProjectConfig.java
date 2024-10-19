@@ -6,6 +6,8 @@ import org.aeonbits.owner.Config;
 public interface ProjectConfig extends Config {
     boolean logging();
     String baseUrl();
-
+    String mysql_url();
+    String mysql_username();
+    String mysql_password();
 
 }

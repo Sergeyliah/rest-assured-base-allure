@@ -1,13 +1,30 @@
 package model;
 
+import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 
 @Data  // Generates getters, setters, toString, equals, and hashCode methods
-@NoArgsConstructor  // Generates a no-argument constructor
-@AllArgsConstructor  // Generates an all-arguments constructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    private String username;
-    private String email;
+    Integer uid;
+    String username;
+    String email;
+    Boolean userActive;
+    Date modifyDate;
+
+    public static User mapFrom(ResultSet rs) throws SQLException{
+        final User user = new User();
+        user.setUid(rs.getInt("uid"));
+        user.setUsername(rs.getString("username"));
+        user.setEmail(rs.getString("email"));
+        user.setUserActive(rs.getBoolean("userActive"));
+        user.setModifyDate(new Date(rs.getTimestamp("modifyDate").getTime()));
+
+        return user;
+    }
 }

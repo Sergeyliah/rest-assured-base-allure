@@ -1,0 +1,16 @@
+application:
+  system-name: autotest
+  assured-log: true
+  datasource:
+    mysql:
+      url: jdbc:mysql://localhost:3306/dev?zeroDataTimeBehavior=convertToNull
+      username: root
+      password: root
+    postgres:
+      url: jdbc:postgresql://localhost:3306/dev
+      username: root
+      password: root
+    h2:
+      url: jdbc:h2:mem:dev
+      username: root
+      password: root
