@@ -1,7 +1,9 @@
+import assertions.AssertableResponse;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import io.restassured.http.ContentType;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import services.UserApiService;
@@ -25,7 +27,8 @@ public class ApiTest extends BaseTest{
         userApiService.getCurrencyRate()
                 .then()
                 .statusCode(200)
-                .body("ccy", notNullValue());
+                .body("ccy", notNullValue())
+                .body(matchesJsonSchemaInClasspath("userSchema.json"));
     }
 
     @Step("{0}")
@@ -39,9 +42,12 @@ public class ApiTest extends BaseTest{
     @Description("Test to verify the status and response of a GET request to retrieve user details.")
     public void testGetUserDetails_UsingAssertableResponse() {
         int exchange = 5;
-        userApiService.getCurrencyRate(exchange)
+        AssertableResponse assertableResponse = userApiService.getCurrencyRate(exchange);
+        assertableResponse
                 .shouldHave(ConditionUtils.statusCode(200))
                 .shouldHave(ConditionUtils.contentType(ContentType.JSON))
                 .shouldHave(ConditionUtils.bodyField("ccy", notNullValue()));
+        assertableResponse.getResponse().then()
+                .body(matchesJsonSchemaInClasspath("userSchema.json"));
     }
 }

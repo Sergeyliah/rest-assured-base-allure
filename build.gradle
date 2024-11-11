@@ -21,6 +21,7 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     testImplementation 'io.qameta.allure:allure-junit5:2.21.0'
+    testImplementation 'io.rest-assured:json-schema-validator:4.4.0'
 
     // Lombok dependency
     compileOnly 'org.projectlombok:lombok:1.18.30'  // Add Lombok for compile-time processing

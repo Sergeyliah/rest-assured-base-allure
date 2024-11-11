@@ -4,8 +4,10 @@ import io.qameta.allure.Step;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBodyExtractionOptions;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public class AssertableResponse {
     private final Response response;
