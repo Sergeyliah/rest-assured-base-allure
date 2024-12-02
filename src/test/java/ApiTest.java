@@ -8,7 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import services.UserApiService;
 import utils.ConditionUtils;
+import utils.Email;
 import utils.RestAssuredUtils;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.empty;
@@ -49,5 +54,14 @@ public class ApiTest extends BaseTest{
                 .shouldHave(ConditionUtils.bodyField("ccy", notNullValue()));
         assertableResponse.getResponse().then()
                 .body(matchesJsonSchemaInClasspath("userSchema.json"));
+    }
+
+    @Test
+    @TmsLink("C12345")  // Link to the Test Management System test case ID
+    @Description("get mail.")
+    public void testGetMail() throws MessagingException {
+        Email email = new Email();
+        Message[] messages = email.getMassage();
+        System.out.println(messages.length);
     }
 }

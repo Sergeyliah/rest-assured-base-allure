@@ -18,6 +18,7 @@ dependencies {
     implementation group: 'io.qameta.allure', name: 'allure-rest-assured', version: '2.29.0'
     implementation group: 'io.qameta.allure', name: 'allure-java-commons', version: '2.29.0'
     implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'com.sun.mail:javax.mail:1.6.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     testImplementation 'io.qameta.allure:allure-junit5:2.21.0'
